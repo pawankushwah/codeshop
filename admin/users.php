@@ -13,7 +13,7 @@
 
     <div class="flex">
         <?php require("./assets/sidebar.php"); ?>
-        <div class="flex flex-col bg-neutral m-4 rounded-lg text-white w-full min-h-screen items-center p-4">
+        <div class="flex flex-col bg-neutral m-4 rounded-lg text-white w-full min-h-fit items-center p-4">
             <div>
                 <?php
                 // error_reporting(0);
@@ -39,10 +39,9 @@
                     <?php } ?>
 
                     <h1 class="text-center text-white pb-8">
-                        <span class="float-left text-2xl">Categories</span>
-                        <a href="manage-product.php" class="float-left clear-both bg-white text-black rounded-md p-2"><span class="text-lg p-0 font-bold">+</span> Add category</a>
+                        <span class="float-left text-2xl">Users</span>
                     </h1>
-                    <div class="h-screen rounded-lg float-left">
+                    <div class="rounded-lg float-left">
                         <table class="table w-1/4 mt-4">
                             <!-- head -->
                             <thead class="text-center">

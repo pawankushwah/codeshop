@@ -13,7 +13,7 @@
 
     <div class="flex">
         <?php require("./assets/sidebar.php"); ?>
-        <div class="flex flex-col bg-neutral m-4 rounded-lg text-white w-full min-h-screen items-center p-4">
+        <div class="flex flex-col bg-neutral m-4 rounded-lg text-white w-full min-h-fit max-h-96 items-center p-4">
             <div>
                 <?php
                 ob_start();

@@ -13,7 +13,7 @@
 
     <div class="flex">
         <?php require("./assets/sidebar.php"); ?>
-        <div class="flex flex-col bg-neutral m-4 rounded-lg text-white w-full min-h-screen items-center p-4">
+        <div class="flex flex-col bg-neutral m-4 rounded-lg text-white w-full min-h-fit max-h-full items-center p-4 overflow-y-auto">
             <div id="categories" class="tabcontent">
                 <?php
                 error_reporting(0);
