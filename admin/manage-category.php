@@ -16,6 +16,7 @@
         <div class="flex flex-col bg-neutral m-4 rounded-lg text-white w-full min-h-screen items-center p-4">
             <div id="categories" class="tabcontent">
                 <?php
+                ob_start();
                 error_reporting(0);
 
                 // category operations
@@ -41,14 +42,21 @@
                     $num = mysqli_num_rows($result);
 
                     if ($num > 0) {
-                        $response = array(
-                            "type" => "error",
-                            "message" => "category Already Exist"
-                        );
-                    } else {
+                        if (isset($_GET['category']) && $_GET['category'] != '') {
+                            $getData = mysqli_fetch_assoc($result);
+                            if ($category == $getData['categories']) {
+
+                            } else {
+                                $response = array(
+                                    "type" => "error",
+                                    "message" => "category Already Exist"
+                                );
+                            }
+                        }
+                    }
+                    if(!isset($response['message'])){
                         // checking whether you came from category page or by url and forming sql accordingly
                         if (isset($_GET['category']) && $_GET['category'] != '') {
-                            $category = get_safe_value($conn, $_GET['category']);
                             $sql = "UPDATE $CATEGORY SET `categories`='$newCategoryName', `status`='1' WHERE `categories`='$category'";
                         } else {
                             $sql = "INSERT INTO $CATEGORY (`categories`,`status`) VALUES ('$newCategoryName','1')";
@@ -56,10 +64,10 @@
 
                         $result = mysqli_query($conn, $sql);
                         if ($result == 1) {
-                            header('location:categories.php');
+                            header('location: categories.php');
                             $response = array(
                                 "type" => "success",
-                                "message" => "Updated successfully"
+                                "message" => "Updated successfully <script>window.location.href='categories.php';</script>"
                             );
                         } else {
                             $response = array(
