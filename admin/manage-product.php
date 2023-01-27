@@ -1,14 +1,15 @@
 <?php
 require("./connection.inc.php");
 // require("./function.inc.php");
-function get_safe_valuex($conn,$data){
-    if($data != ""){
+function get_safe_valuex($conn, $data)
+{
+    if ($data != "") {
         $data = trim($data);
-        return mysqli_real_escape_string($conn,$data);
+        return mysqli_real_escape_string($conn, $data);
     }
 }
 ob_start();
-error_reporting(0);
+// error_reporting(0);
 /* category operations */
 // fetching categories
 $sql = "SELECT * FROM $CATEGORY ORDER BY `categories` ASC";
@@ -35,7 +36,7 @@ if (isset($_POST['addProduct'])) {
     $mrp = get_safe_valuex($conn, $_POST['mrp']);
     $selling_price = get_safe_valuex($conn, $_POST['selling_price']);
     $qty = get_safe_valuex($conn, $_POST['qty']);
-    $image = get_safe_valuex($conn, $_FILES['image']['name']);
+    // $image = get_safe_valuex($conn, $_FILES['image']['name']);
     $short_desc = get_safe_valuex($conn, $_POST['short_desc']);
     $description = get_safe_valuex($conn, $_POST['description']);
     $meta_title = get_safe_valuex($conn, $_POST['meta_title']);
@@ -44,44 +45,100 @@ if (isset($_POST['addProduct'])) {
     $meta_keyword = get_safe_valuex($conn, $_POST['meta_keyword']);
 
     // checking the image
-    
+    $imagename = 'image';
+    $filename = get_safe_valuex($conn, $_FILES[$imagename]['name']);
+    $tempfilename = get_safe_valuex($conn, $_FILES[$imagename]['tmp_name']);
+    $filesize = get_safe_valuex($conn, $_FILES[$imagename]['size']);
+    $folder = "../images/product/";
+    $maxFileSize = 2097152;
 
-    $existsql = "SELECT * FROM PRODUCT WHERE `name`='$name';";
-    $product_name_result = mysqli_query($conn, $existsql);
-    $product_name_num = mysqli_num_rows($product_name_result);
-
-    if ($product_name_num > 0) {
-        if (isset($_GET['id']) && $_GET['id'] != '') {
-            $getData = mysqli_fetch_assoc($product_name_result);
-            if ($id == $getData['id']) {
-            } else {
-                $response = array(
-                    "type" => "error",
-                    "message" => "Name Already Exist"
-                );
-            }
-        }
-    }
-    if (!isset($response['message'])) {
-        // checking whether you came from category page or by url and forming sql accordingly
-        if (isset($_GET['id']) && $_GET['id'] != '') {
-            $sql = "UPDATE PRODUCT SET `categories_name`='$categories_name', `name`='$name', `mrp`='$mrp', `selling_price`='$selling_price', `qty`='$qty', `image`='$image', `meta_title`='$meta_title', `meta_short_desc`='$meta_short_desc', `meta_desc`='$meta_desc', `meta_keyword`='$meta_keyword', `description`='$description', `short_desc`='$short_desc', `status`='1' WHERE `id`='$id'";
-        } else {
-            $sql = "INSERT INTO PRODUCT (`categories_name`, `name`, `mrp`, `selling_price`, `qty`, `image`, `meta_title`, `meta_short_desc`, `meta_desc`, `meta_keyword`, `description`, `short_desc`, `status`) VALUES ('$categories_name', '$name', '$mrp', '$selling_price', '$qty', '$image', '$meta_title', '$meta_short_desc', '$meta_desc', '$meta_keyword', '$description', '$short_desc', '1');";
-        }
-
-        $result = mysqli_query($conn, $sql);
-        if ($result == 1) {
-            header('location: product.php');
+    // validating image file
+    $allowed_image_extension = array(
+        "png",
+        "jpg",
+        "jpeg"
+    );
+    $file_extension = pathinfo($filename, PATHINFO_EXTENSION);
+    // Validate file input to check if is not empty
+    if (!file_exists($_FILES[$imagename]['tmp_name'])) {
+        $response = array(
+            "type" => "error",
+            "ImageMessage" => "Choose image file to upload."
+        );
+    }    // Validate file input to check if it is with valid extension
+    else if (!in_array($file_extension, $allowed_image_extension)) {
+        $response = array(
+            "type" => "error",
+            "ImageMessage" => "Upload valid images. Only PNG and JPEG are allowed."
+        );
+    }    // Validate image file size
+    else if (($filesize > $maxFileSize)) {
+        $response = array(
+            "type" => "error",
+            "ImageMessage" => "Image size exceeds 2MB"
+        );
+    }    // Validate image file dimension
+    // else if ($width > "300" || $height > "200") {
+    //     $response = array(
+    //         "type" => "error",
+    //         "ImageMessage" => "Image dimension should be within 300X200"
+    //     );
+    // } 
+    else {
+        $uniqFileName = pathinfo($_FILES[$imagename]["name"], PATHINFO_FILENAME) . "-" . uniqid() . "." . pathinfo($_FILES[$imagename]["name"], PATHINFO_EXTENSION);
+        $target = $folder . $uniqFileName;
+        if (move_uploaded_file($_FILES[$imagename]["tmp_name"], $target)) {
             $response = array(
                 "type" => "success",
-                "message" => "Updated successfully"
+                "ImageMessage" => "Image uploaded successfully."
             );
         } else {
             $response = array(
                 "type" => "error",
-                "message" => "Problem While updating Category"
+                "ImageMessage" => "Problem in uploading image files."
             );
+        }
+    }
+
+    if ($response['type'] != "error") {
+        $existsql = "SELECT * FROM PRODUCT WHERE `name`='$name';";
+        $product_name_result = mysqli_query($conn, $existsql);
+        $product_name_num = mysqli_num_rows($product_name_result);
+
+        if ($product_name_num > 0) {
+            if (isset($_GET['id']) && $_GET['id'] != '') {
+                $getData = mysqli_fetch_assoc($product_name_result);
+                if ($id == $getData['id']) {
+                } else {
+                    $response = array(
+                        "type" => "error",
+                        "message" => "Name Already Exist"
+                    );
+                }
+            }
+        }
+
+        if (!isset($response['message'])) {
+            // checking whether you came from category page or by url and forming sql accordingly
+            if (isset($_GET['id']) && $_GET['id'] != '') {
+                $sql = "UPDATE PRODUCT SET `categories_name`='$categories_name', `name`='$name', `mrp`='$mrp', `selling_price`='$selling_price', `qty`='$qty', `image`='$uniqFileName', `meta_title`='$meta_title', `meta_short_desc`='$meta_short_desc', `meta_desc`='$meta_desc', `meta_keyword`='$meta_keyword', `description`='$description', `short_desc`='$short_desc', `status`='1' WHERE `id`='$id'";
+            } else {
+                $sql = "INSERT INTO PRODUCT (`categories_name`, `name`, `mrp`, `selling_price`, `qty`, `image`, `meta_title`, `meta_short_desc`, `meta_desc`, `meta_keyword`, `description`, `short_desc`, `status`) VALUES ('$categories_name', '$name', '$mrp', '$selling_price', '$qty', '$uniqFileName', '$meta_title', '$meta_short_desc', '$meta_desc', '$meta_keyword', '$description', '$short_desc', '1');";
+            }
+
+            $result = mysqli_query($conn, $sql);
+            if ($result == 1) {
+                header('location: product.php');
+                $response = array(
+                    "type" => "success",
+                    "message" => "Updated successfully"
+                );
+            } else {
+                $response = array(
+                    "type" => "error",
+                    "message" => "Problem While updating Category"
+                );
+            }
         }
     }
 }
@@ -112,7 +169,8 @@ if (isset($_POST['addProduct'])) {
                                 <!-- Messages are shown here -->
                                 <?php if (!empty($response)) { ?>
                                     <h3 class="alert alert-<?php if (isset($response["type"])) echo  $response["type"]; ?> shadow-lg pl-8">
-                                        <?php echo $response["message"]; ?>
+                                        <?php if(isset($response["message"])) echo $response["message"]; ?>
+                                        <?php if(isset($response['ImageMessage'])) echo $response["ImageMessage"]; ?>
                                     </h3>
                                 <?php } ?>
 

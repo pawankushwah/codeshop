@@ -65,7 +65,7 @@
                             <td><?php echo $row['id']; ?></td>
                             <td><?php echo $row['categories_name'] ?></td>
                             <td><?php echo $row['name'] ?></td>
-                            <td><?php echo $row['image'] ?></td>
+                            <td><img src="../images/product/<?php echo $row['image'] ?>" alt="product image"></td>
                             <td><?php echo $row['mrp'] ?></td>
                             <td><?php echo $row['selling_price'] ?></td>
                             <td><?php echo $row['qty'] ?></td>
