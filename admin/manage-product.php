@@ -9,7 +9,7 @@ function get_safe_valuex($conn, $data)
     }
 }
 ob_start();
-// error_reporting(0);
+error_reporting(0);
 /* category operations */
 // fetching categories
 $sql = "SELECT * FROM $CATEGORY ORDER BY `categories` ASC";

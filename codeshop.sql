@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 27, 2023 at 08:30 AM
+-- Generation Time: Jan 27, 2023 at 01:02 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.0.25
 
@@ -58,12 +58,12 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`id`, `categories`, `status`) VALUES
-(26, 'hats', 1),
+(26, 'hater', 1),
 (27, 'bags', 1),
 (28, 'clothes', 1),
 (29, 'none', 1),
 (30, 'nothing', 1),
-(31, 'pawan', 1);
+(32, 'camera', 1);
 
 -- --------------------------------------------------------
 
@@ -98,16 +98,24 @@ CREATE TABLE `product` (
   `categories_name` varchar(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `mrp` float NOT NULL,
-  `selling-price` float NOT NULL,
+  `selling_price` float NOT NULL,
   `qty` int(11) NOT NULL,
   `image` varchar(255) NOT NULL,
-  `meta-title` text NOT NULL,
-  `meta-desc` text NOT NULL,
-  `meta-keyword` varchar(2000) NOT NULL,
+  `meta_title` text NOT NULL,
+  `meta_desc` text NOT NULL,
+  `meta_short_desc` varchar(2000) NOT NULL,
+  `meta_keyword` varchar(2000) NOT NULL,
   `description` text NOT NULL,
-  `short-desc` varchar(2000) NOT NULL,
+  `short_desc` varchar(2000) NOT NULL,
   `status` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product`
+--
+
+INSERT INTO `product` (`id`, `categories_name`, `name`, `mrp`, `selling_price`, `qty`, `image`, `meta_title`, `meta_desc`, `meta_short_desc`, `meta_keyword`, `description`, `short_desc`, `status`) VALUES
+(6, 'Select Cate', 'Canon IXUS 2200', 24995, 24995, 45, 'ixus-63d3ba207ddf1.png', 'fdgsdfg', 'Perfect for any oc', 'dsfgsdf', 'dfgsdfgsdffghf', 'Perfect for any occasion, the IXUS 285 HS cap', 'Perfect for any occasion, t', 1);
 
 -- --------------------------------------------------------
 
@@ -180,7 +188,7 @@ ALTER TABLE `admin_users`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `contact_us`
@@ -192,7 +200,7 @@ ALTER TABLE `contact_us`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
