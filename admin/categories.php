@@ -55,7 +55,7 @@
                     $result = mysqli_query($conn, $sql);
                 }
 
-                $sql = "SELECT * FROM $CATEGORY";
+                $sql = "SELECT * FROM $CATEGORY ORDER BY $CATEGORY.`id` DESC";
                 $result = mysqli_query($conn, $sql);
                 ?>
                 <div class="overflow-x-auto text-black text-center">

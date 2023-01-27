@@ -13,9 +13,7 @@
 
     <div class="flex">
         <?php require("./assets/sidebar.php"); ?>
-        <div class="flex flex-col bg-neutral m-auto rounded-lg text-blackl w-full h-fit items-center pl-96 pr-10 pb-10 overflow-x-auto space-y-2">
-            <h1 class="text-center text-white text-3xl">Products</h1>
-            <a href="manage-product.php" class="bg-white text-black rounded-md p-2"><span class="text-lg p-0 font-bold">+</span> Add Product</a>
+        <div class="relative flex flex-col bg-neutral m-auto rounded-lg text-blackl w-full h-fit items-center overflow-x-auto space-y-2">
             <?php
             // error_reporting(0);
             // category operations
@@ -30,17 +28,15 @@
             $sql = "SELECT * FROM PRODUCT";
             $result = mysqli_query($conn, $sql);
             ?>
-            <!-- Messages are shown here -->
-            <!-- <?php if (!empty($response)) { ?>
-                    <h3 class="alert alert-<?php if (isset($response["type"])) echo  $response["type"]; ?> shadow-lg pl-8">
-                        <?php if (isset($response['message'])) echo $response["message"]; ?>
-                    </h3>
-                <?php } ?> -->
 
             <!-- <h1 class="text-center text-white pb-8">
                         <span class="text-2xl">Product</span>
                     </h1> -->
-            <table class="table table-compact max-w-96">
+            <table class="table m-auto">
+                <caption>
+                    <h1 class="text-center text-white text-3xl">Products <a href="manage-product.php" class="text-green-500 text-sm rounded-lg pl-1 pr-1 bg-white mb-8">+ Add Product</a></h1>
+                    
+                </caption>
                 <thead>
                     <tr>
                         <td>#</td>
@@ -71,16 +67,17 @@
                             <td><?php echo $row['name'] ?></td>
                             <td><?php echo $row['image'] ?></td>
                             <td><?php echo $row['mrp'] ?></td>
-                            <td><?php echo $row['selling-price'] ?></td>
+                            <td><?php echo $row['selling_price'] ?></td>
                             <td><?php echo $row['qty'] ?></td>
-                            <td><?php echo $row['meta-title'] ?></td>
-                            <td><?php echo $row['meta-desc'] ?></td>
-                            <td><?php echo $row['meta-keyword'] ?></td>
+                            <td><?php echo $row['short_desc'] ?></td>
                             <td><?php echo $row['description'] ?></td>
-                            <td><?php echo $row['short-desc'] ?></td>
+                            <td><?php echo $row['meta_title'] ?></td>
+                            <td><?php echo $row['meta_short_desc'] ?></td>
+                            <td><?php echo $row['meta_desc'] ?></td>
+                            <td><?php echo $row['meta_keyword'] ?></td>
                             <td><?php echo $row['status'] ?></td>
-                            <td></td>
-                            <td class="text-white">
+                            <td class="text-white space-x-1">
+                                <a href="manage-product.php?type=edit&id=<?php echo $row['id']; ?>" class="btn">Edit</a>
                                 <a href="?type=delete&id=<?php echo $row['id']; ?>" class="btn btn-error">Delete</a>
                             </td>
                         </tr>
