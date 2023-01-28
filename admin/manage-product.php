@@ -10,6 +10,7 @@ function get_safe_valuex($conn, $data)
 }
 ob_start();
 error_reporting(0);
+$imageRequired = true;
 /* category operations */
 // fetching categories
 $sql = "SELECT * FROM $CATEGORY ORDER BY `categories` ASC";
@@ -18,6 +19,7 @@ $category_result = mysqli_query($conn, $sql);
 // showing the value of clicked category
 if (isset($_GET['type']) && $_GET['type'] == 'edit') {
     if (isset($_GET['id']) && $_GET['id'] != '') {
+        $imageRequired = false;
         $id = get_safe_valuex($conn, $_GET['id']);
 
         $sql = "SELECT * FROM PRODUCT WHERE `id`='$id'";
@@ -53,50 +55,52 @@ if (isset($_POST['addProduct'])) {
     $maxFileSize = 2097152;
 
     // validating image file
-    $allowed_image_extension = array(
-        "png",
-        "jpg",
-        "jpeg"
-    );
-    $file_extension = pathinfo($filename, PATHINFO_EXTENSION);
-    // Validate file input to check if is not empty
-    if (!file_exists($_FILES[$imagename]['tmp_name'])) {
-        $response = array(
-            "type" => "error",
-            "ImageMessage" => "Choose image file to upload."
+    if ($filename != '') {
+        $allowed_image_extension = array(
+            "png",
+            "jpg",
+            "jpeg"
         );
-    }    // Validate file input to check if it is with valid extension
-    else if (!in_array($file_extension, $allowed_image_extension)) {
-        $response = array(
-            "type" => "error",
-            "ImageMessage" => "Upload valid images. Only PNG and JPEG are allowed."
-        );
-    }    // Validate image file size
-    else if (($filesize > $maxFileSize)) {
-        $response = array(
-            "type" => "error",
-            "ImageMessage" => "Image size exceeds 2MB"
-        );
-    }    // Validate image file dimension
-    // else if ($width > "300" || $height > "200") {
-    //     $response = array(
-    //         "type" => "error",
-    //         "ImageMessage" => "Image dimension should be within 300X200"
-    //     );
-    // } 
-    else {
-        $uniqFileName = pathinfo($_FILES[$imagename]["name"], PATHINFO_FILENAME) . "-" . uniqid() . "." . pathinfo($_FILES[$imagename]["name"], PATHINFO_EXTENSION);
-        $target = $folder . $uniqFileName;
-        if (move_uploaded_file($_FILES[$imagename]["tmp_name"], $target)) {
-            $response = array(
-                "type" => "success",
-                "ImageMessage" => "Image uploaded successfully."
-            );
-        } else {
+        $file_extension = pathinfo($filename, PATHINFO_EXTENSION);
+        // Validate file input to check if is not empty
+        if (!file_exists($_FILES[$imagename]['tmp_name'])) {
             $response = array(
                 "type" => "error",
-                "ImageMessage" => "Problem in uploading image files."
+                "ImageMessage" => "Choose image file to upload."
             );
+        }      // Validate file input to check if it is with valid extension
+        else if (!in_array($file_extension, $allowed_image_extension)) {
+            $response = array(
+                "type" => "error",
+                "ImageMessage" => "Upload valid images. Only PNG and JPEG are allowed."
+            );
+        }    // Validate image file size
+        else if (($filesize > $maxFileSize)) {
+            $response = array(
+                "type" => "error",
+                "ImageMessage" => "Image size exceeds 2MB"
+            );
+        }    // Validate image file dimension
+        // else if ($width > "300" || $height > "200") {
+        //     $response = array(
+        //         "type" => "error",
+        //         "ImageMessage" => "Image dimension should be within 300X200"
+        //     );
+        // } 
+        else {
+            $uniqFileName = pathinfo($_FILES[$imagename]["name"], PATHINFO_FILENAME) . "-" . uniqid() . "." . pathinfo($_FILES[$imagename]["name"], PATHINFO_EXTENSION);
+            $target = $folder . $uniqFileName;
+            if (move_uploaded_file($_FILES[$imagename]["tmp_name"], $target)) {
+                $response = array(
+                    "type" => "success",
+                    "ImageMessage" => "Image uploaded successfully."
+                );
+            } else {
+                $response = array(
+                    "type" => "error",
+                    "ImageMessage" => "Problem in uploading image files."
+                );
+            }
         }
     }
 
@@ -121,9 +125,17 @@ if (isset($_POST['addProduct'])) {
         if (!isset($response['message'])) {
             // checking whether you came from category page or by url and forming sql accordingly
             if (isset($_GET['id']) && $_GET['id'] != '') {
-                $sql = "UPDATE PRODUCT SET `categories_name`='$categories_name', `name`='$name', `mrp`='$mrp', `selling_price`='$selling_price', `qty`='$qty', `image`='$uniqFileName', `meta_title`='$meta_title', `meta_short_desc`='$meta_short_desc', `meta_desc`='$meta_desc', `meta_keyword`='$meta_keyword', `description`='$description', `short_desc`='$short_desc', `status`='1' WHERE `id`='$id'";
+                if (isset($uniqFileName)) {
+                    $sql = "UPDATE PRODUCT SET `categories_name`='$categories_name', `name`='$name', `mrp`='$mrp', `selling_price`='$selling_price', `qty`='$qty', `image`='$uniqFileName', `meta_title`='$meta_title', `meta_short_desc`='$meta_short_desc', `meta_desc`='$meta_desc', `meta_keyword`='$meta_keyword', `description`='$description', `short_desc`='$short_desc', `status`='1' WHERE `id`='$id'";
+                } else {
+                    $sql = "UPDATE PRODUCT SET `categories_name`='$categories_name', `name`='$name', `mrp`='$mrp', `selling_price`='$selling_price', `qty`='$qty', `meta_title`='$meta_title', `meta_short_desc`='$meta_short_desc', `meta_desc`='$meta_desc', `meta_keyword`='$meta_keyword', `description`='$description', `short_desc`='$short_desc', `status`='1' WHERE `id`='$id'";
+                }
             } else {
-                $sql = "INSERT INTO PRODUCT (`categories_name`, `name`, `mrp`, `selling_price`, `qty`, `image`, `meta_title`, `meta_short_desc`, `meta_desc`, `meta_keyword`, `description`, `short_desc`, `status`) VALUES ('$categories_name', '$name', '$mrp', '$selling_price', '$qty', '$uniqFileName', '$meta_title', '$meta_short_desc', '$meta_desc', '$meta_keyword', '$description', '$short_desc', '1');";
+                if (isset($uniqFileName)) {
+                    $sql = "INSERT INTO PRODUCT (`categories_name`, `name`, `mrp`, `selling_price`, `qty`, `image`, `meta_title`, `meta_short_desc`, `meta_desc`, `meta_keyword`, `description`, `short_desc`, `status`) VALUES ('$categories_name', '$name', '$mrp', '$selling_price', '$qty', '$uniqFileName', '$meta_title', '$meta_short_desc', '$meta_desc', '$meta_keyword', '$description', '$short_desc', '1');";
+                } else {
+                    $sql = "INSERT INTO PRODUCT (`categories_name`, `name`, `mrp`, `selling_price`, `qty`, `meta_title`, `meta_short_desc`, `meta_desc`, `meta_keyword`, `description`, `short_desc`, `status`) VALUES ('$categories_name', '$name', '$mrp', '$selling_price', '$qty', '$meta_title', '$meta_short_desc', '$meta_desc', '$meta_keyword', '$description', '$short_desc', '1');";
+                }
             }
 
             $result = mysqli_query($conn, $sql);
@@ -169,8 +181,8 @@ if (isset($_POST['addProduct'])) {
                                 <!-- Messages are shown here -->
                                 <?php if (!empty($response)) { ?>
                                     <h3 class="alert alert-<?php if (isset($response["type"])) echo  $response["type"]; ?> shadow-lg pl-8">
-                                        <?php if(isset($response["message"])) echo $response["message"]; ?>
-                                        <?php if(isset($response['ImageMessage'])) echo $response["ImageMessage"]; ?>
+                                        <?php if (isset($response["message"])) echo $response["message"]; ?>
+                                        <?php if (isset($response['ImageMessage'])) echo $response["ImageMessage"]; ?>
                                     </h3>
                                 <?php } ?>
 
@@ -185,7 +197,7 @@ if (isset($_POST['addProduct'])) {
 
                                 </select>
                                 <input type="text" value="<?php if (isset($row)) echo $row['name'] ?>" name="name" placeholder="Product Name" class="p-2 rounded-md w-full border-2 border-black outline-none" required>
-                                <input type="file" value="<?php if (isset($row)) echo $row['image'] ?>" name="image" class="file-input file-input-bordered w-full max-w-xs" />
+                                <input type="file" value="<?php if (isset($row)) echo $row['image'] ?>" name="image" class="file-input file-input-bordered w-full max-w-xs" <?php if($imageRequired == true) echo "required" ?>>
                                 <input type="text" value="<?php if (isset($row)) echo $row['mrp'] ?>" name="mrp" placeholder="Product MRP" class="p-2 rounded-md w-full border-2 border-black outline-none" required>
                                 <input type="text" value="<?php if (isset($row)) echo $row['selling_price'] ?>" name="selling_price" placeholder="Product Selling-Price" class="p-2 rounded-md w-full border-2 border-black outline-none" required>
                                 <input type="text" value="<?php if (isset($row)) echo $row['qty'] ?>" name="qty" placeholder="Product Quantity" class="p-2 rounded-md w-full border-2 border-black outline-none" required>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 27, 2023 at 01:02 PM
+-- Generation Time: Jan 28, 2023 at 02:52 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.0.25
 
@@ -58,12 +58,9 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`id`, `categories`, `status`) VALUES
-(26, 'hater', 1),
+(26, 'hat', 1),
 (27, 'bags', 1),
-(28, 'clothes', 1),
-(29, 'none', 1),
-(30, 'nothing', 1),
-(32, 'camera', 1);
+(33, 'cat4', 1);
 
 -- --------------------------------------------------------
 
@@ -115,7 +112,9 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`id`, `categories_name`, `name`, `mrp`, `selling_price`, `qty`, `image`, `meta_title`, `meta_desc`, `meta_short_desc`, `meta_keyword`, `description`, `short_desc`, `status`) VALUES
-(6, 'Select Cate', 'Canon IXUS 2200', 24995, 24995, 45, 'ixus-63d3ba207ddf1.png', 'fdgsdfg', 'Perfect for any oc', 'dsfgsdf', 'dfgsdfgsdffghf', 'Perfect for any occasion, the IXUS 285 HS cap', 'Perfect for any occasion, t', 1);
+(6, 'cat4', 'Canon IXUS 2200', 24995, 24995, 45, 'ixus-63d50c3c8cfd2.png', 'fdgsdfg', 'Perfect for any oc', 'dsfgsdf', 'dfgsdfgsdffghf', 'Perfect for any occasion, the IXUS 285 HS cap', 'Perfect for any occasion, t', 1),
+(7, 'cat4', 'laptop by ProArt', 12345, 18000, 12, 'asus laptop-63d50df692d0b.jpg', 'laptop by ProArt', 'laptop has 1tb ssd, 1tb hdd, 32gb ram and intel i9 11th gen processor', 'laptop is awesome', 'laptop proart', 'laptop has 1tb ssd, 1tb hdd, 32gb ram and intel i9 11th gen processor', 'laptop is awesome', 1),
+(8, 'bags', '32 Ltrs Grey Casual Backpack (AMT FIZZ SCH BAG 02 - GREY) american tourister', 199, 99, 33, 'american tourister bag-63d5267468746.jpg', '32 Ltrs Grey Casual Backpack (AMT FIZZ SCH BAG 02 - GREY) american tourister', 'Laptop Compatibility: No, Strap Type: Adjustable,\r\nOuter Material: Polyester, Color: Grey\r\nWater Resistance: Water resistant\r\nCapacity: 32 liters; Dimensions: 32.5 cms x 18 cms x 50 cms (LxWxH)\r\nNumber of Wheels: 0, Number of compartments: 3\r\nWarranty type: Manufacturer; 1 year International warranty valid for 1 year from the original date of purchase\r\nMesh pockets on both sides to accommodate your sipper or bottle and umbrella', 'Laptop Compatibility: No, Strap Type: Adjustable,\r\nOuter Material: Polyester, Color: Grey\r\nWater Resistance: Water resistant', 'bags', 'Laptop Compatibility: No, Strap Type: Adjustable,\r\nOuter Material: Polyester, Color: Grey\r\nWater Resistance: Water resistant\r\nCapacity: 32 liters; Dimensions: 32.5 cms x 18 cms x 50 cms (LxWxH)\r\nNumber of Wheels: 0, Number of compartments: 3\r\nWarranty type: Manufacturer; 1 year International warranty valid for 1 year from the original date of purchase\r\nMesh pockets on both sides to accommodate your sipper or bottle and umbrella', 'Laptop Compatibility: No, Strap Type: Adjustable,\r\nOuter Material: Polyester, Color: Grey\r\nWater Resistance: Water resistant', 1);
 
 -- --------------------------------------------------------
 
@@ -188,7 +187,7 @@ ALTER TABLE `admin_users`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `contact_us`
@@ -200,7 +199,7 @@ ALTER TABLE `contact_us`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`
