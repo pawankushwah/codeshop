@@ -19,16 +19,21 @@
 
     function get_product($conn, $type='', $categories_name=''){
         $sql = "SELECT * FROM PRODUCT WHERE `status`=1";
-        if($categories_name!=''){
-            $sql .= " AND `categories_name`='$categories_name'";
-        }
+        // if($categories_name!=''){
+        //     $sql .= " AND `categories_name`='$categories_name'";
+        // }
         if($type == 'latest'){
             $sql .= " ORDER BY `id` DESC";
         }
         $res = mysqli_query($conn, $sql);
         $data = array();
         while($row = mysqli_fetch_assoc($res)){
-            $data[] = $row;
+            $obj = json_decode($row['categories_name'],true);
+            foreach($obj as $category){
+                if($category == $categories_name){
+                    $data[] = $row;
+                }
+            }
         }
         return $data;
     }

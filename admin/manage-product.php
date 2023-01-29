@@ -9,7 +9,7 @@ function get_safe_valuex($conn, $data)
     }
 }
 ob_start();
-error_reporting(0);
+// error_reporting(0);
 $imageRequired = true;
 /* category operations */
 // fetching categories
@@ -33,7 +33,7 @@ $categories_name = $name = $image = $mrp = $selling_price = $qty = $short_desc =
 
 if (isset($_POST['addProduct'])) {
     // getting data from form
-    $categories_name = get_safe_valuex($conn, $_POST['category_name']);
+    $categories_name = get_safe_valuex($conn,json_encode($_POST['category_name']));
     $name = get_safe_valuex($conn, $_POST['name']);
     $mrp = get_safe_valuex($conn, $_POST['mrp']);
     $selling_price = get_safe_valuex($conn, $_POST['selling_price']);
@@ -187,7 +187,7 @@ if (isset($_POST['addProduct'])) {
                                 <?php } ?>
 
                                 <div class="text-center font-bold text-3xl text-white mt-4">Add | Edit Product</div>
-                                <select type="text" name="category_name" placeholder="Category Name" class="p-2 mt-4 rounded-md w-full border-2 border-black outline-none">
+                                <select type="text" name="category_name[]" placeholder="Category Name" class="p-2 mt-4 rounded-md w-full border-2 border-black outline-none" multiple>
                                     <option>Select Category</option>
                                     <?php
                                     while ($category_row = mysqli_fetch_assoc($category_result)) {
