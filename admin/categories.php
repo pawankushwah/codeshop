@@ -22,7 +22,7 @@
                     $id = get_safe_value($conn, $_GET['id']);
                 }
 
-                if(isset($_GET['category']) && $_GET['category'] != ''){
+                if (isset($_GET['category']) && $_GET['category'] != '') {
                     $category = get_safe_value($conn, $_GET['category']);
                 }
 
@@ -57,32 +57,42 @@
 
                 $sql = "SELECT * FROM $CATEGORY ORDER BY $CATEGORY.`id` DESC";
                 $result = mysqli_query($conn, $sql);
+                $num_result = mysqli_num_rows($result);
                 ?>
                 <div class="overflow-x-auto text-black text-center">
 
                     <!-- Messages are shown here -->
                     <?php if (!empty($response)) { ?>
                         <h3 class="alert alert-<?php if (isset($response["type"])) echo  $response["type"]; ?> shadow-lg pl-8">
-                            <?php if(isset($response['message'])) echo $response["message"]; ?>
+                            <?php if (isset($response['message'])) echo $response["message"]; ?>
                         </h3>
                     <?php } ?>
+                    <?php if ($num_result > 0) {  ?>
+                        <h1 class="text-center text-white pb-8">
+                            <span class="float-left text-2xl">Categories</span>
+                            <a href="add-category.php" class="float-right bg-white text-black rounded-md p-2"><span class="text-lg p-0 font-bold">+</span> Add category</a>
+                        </h1>
+                        <table class="table w-full mt-4">
+                            <!-- head -->
+                            <thead class="text-center">
+                                <tr>
+                                    <td>S.No.</td>
+                                    <td>category</td>
+                                    <td>status</td>
+                                    <td>function</td>
+                                </tr>
+                            </thead>
 
-                    <h1 class="text-center text-white pb-8">
-                        <span class="float-left text-2xl">Categories</span>
-                        <a href="add-category.php" class="float-right bg-white text-black rounded-md p-2"><span class="text-lg p-0 font-bold">+</span> Add category</a>
-                    </h1>
-                    <table class="table w-full mt-4">
-                        <!-- head -->
-                        <thead class="text-center">
-                            <tr>
-                                <td>S.No.</td>
-                                <td>category</td>
-                                <td>status</td>
-                                <td>function</td>
-                            </tr>
-                        </thead>
+                    <?php } else {
+                        echo "<span class='text-white mr-2'>Nothing to Fetch<span> <a href='add-category.php' class='float-right bg-white text-black rounded-md'><span class='text-lg p-0 font-bold'>+</span> Add category</a>";
+                    } ?>
                         <tbody class="text-center">
-                            <?php $i = 1; while ($row = mysqli_fetch_assoc($result)) { ?>
+                            <?php $i = 1;
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                if ($num_result <= 0) {
+                                    break;
+                                }
+                            ?>
                                 <tr>
                                     <td><?php echo $i++; ?></td>
                                     <td><?php echo $row['categories'] ?></td>
@@ -99,7 +109,7 @@
                                 </tr>
                             <?php } ?>
                         </tbody>
-                    </table>
+                        </table>
 
                 </div>
             </div>

@@ -33,7 +33,7 @@ $categories_name = $name = $image = $mrp = $selling_price = $qty = $short_desc =
 
 if (isset($_POST['addProduct'])) {
     // getting data from form
-    $categories_name = get_safe_valuex($conn,json_encode($_POST['category_name']));
+    $categories_name = get_safe_valuex($conn, json_encode($_POST['category_name']));
     $name = get_safe_valuex($conn, $_POST['name']);
     $mrp = get_safe_valuex($conn, $_POST['mrp']);
     $selling_price = get_safe_valuex($conn, $_POST['selling_price']);
@@ -148,7 +148,7 @@ if (isset($_POST['addProduct'])) {
             } else {
                 $response = array(
                     "type" => "error",
-                    "message" => "Problem While updating Category"
+                    "message" => "Problem While updating/adding product"
                 );
             }
         }
@@ -187,34 +187,40 @@ if (isset($_POST['addProduct'])) {
                                 <?php } ?>
 
                                 <div class="text-center font-bold text-3xl text-white mt-4">Add | Edit Product</div>
-                                <select type="text" name="category_name[]" placeholder="Category Name" class="p-2 mt-4 rounded-md w-full border-2 border-black outline-none" multiple>
-                                    <option>Select Category</option>
-                                    <?php
-                                    while ($category_row = mysqli_fetch_assoc($category_result)) {
-                                        echo '<option value=' . $category_row['categories'] . '>' . $category_row['categories'] . '</option>';
-                                    }
-                                    ?>
 
-                                </select>
-                                <input type="text" value="<?php if (isset($row)) echo $row['name'] ?>" name="name" placeholder="Product Name" class="p-2 rounded-md w-full border-2 border-black outline-none" required>
-                                <input type="file" value="<?php if (isset($row)) echo $row['image'] ?>" name="image" class="file-input file-input-bordered w-full max-w-xs" <?php if($imageRequired == true) echo "required" ?>>
-                                <input type="text" value="<?php if (isset($row)) echo $row['mrp'] ?>" name="mrp" placeholder="Product MRP" class="p-2 rounded-md w-full border-2 border-black outline-none" required>
-                                <input type="text" value="<?php if (isset($row)) echo $row['selling_price'] ?>" name="selling_price" placeholder="Product Selling-Price" class="p-2 rounded-md w-full border-2 border-black outline-none" required>
-                                <input type="text" value="<?php if (isset($row)) echo $row['qty'] ?>" name="qty" placeholder="Product Quantity" class="p-2 rounded-md w-full border-2 border-black outline-none" required>
-                                <textarea name="short_desc" placeholder="Short Description" class="p-2 rounded-md w-full border-2 border-black outline-none" required><?php if (isset($row)) echo $row['short_desc'] ?></textarea>
-                                <textarea name="description" placeholder="Description" class="p-2 rounded-md w-full border-2 border-black outline-none" required><?php if (isset($row)) echo $row['description'] ?></textarea>
-                                <textarea name="meta_title" placeholder="Meta Title" class="p-2 rounded-md w-full border-2 border-black outline-none"><?php if (isset($row)) echo $row['meta_title'] ?></textarea>
-                                <textarea name="meta_short_desc" placeholder="Meta short Description" class="p-2 rounded-md w-full border-2 border-black outline-none"><?php if (isset($row)) echo $row['meta_short_desc'] ?></textarea>
-                                <textarea name="meta_desc" placeholder="Meta Description" class="p-2 rounded-md w-full border-2 border-black outline-none"><?php if (isset($row)) echo $row['meta_desc'] ?></textarea>
-                                <textarea name="meta_keyword" placeholder="Meta Keyword" class="p-2 rounded-md w-full border-2 border-black outline-none"><?php if (isset($row)) echo $row['meta_keyword'] ?></textarea>
-                                <button type="submit" name="addProduct" class="btn btn-md btn-info w-full text-white">Add Product</button>
-                            </form>
+                                <div class="form-control">
+                                    <label class="input-group input-group-vertical">
+                                        <span>Check Category</span>
+                                        <!-- <input type="text" placeholder="info@site.com" class="input input-bordered w-full" /> -->
+                                        <div class="flex p-2 space-x-2 bg-white">
+                                            <?php
+                                            $i = 0;
+                                            while ($category_row = mysqli_fetch_assoc($category_result)) {
+                                                echo '<input type="checkbox" name="category'.$i.'" class="m-2" value="'.$category_row["categories"].'">'.$category_row["categories"].'</input>';
+                                            }
+                                            ?>
+                                    </label>
+                                </div>
                         </div>
+                        <input type="text" value="<?php if (isset($row)) echo $row['name'] ?>" name="name" placeholder="Product Name" class="p-2 rounded-md w-full border-2 border-black outline-none" required>
+                        <input type="file" value="<?php if (isset($row)) echo $row['image'] ?>" name="image" class="file-input file-input-bordered w-full max-w-xs" <?php if ($imageRequired == true) echo "required" ?>>
+                        <input type="text" value="<?php if (isset($row)) echo $row['mrp'] ?>" name="mrp" placeholder="Product MRP" class="p-2 rounded-md w-full border-2 border-black outline-none" required>
+                        <input type="text" value="<?php if (isset($row)) echo $row['selling_price'] ?>" name="selling_price" placeholder="Product Selling-Price" class="p-2 rounded-md w-full border-2 border-black outline-none" required>
+                        <input type="text" value="<?php if (isset($row)) echo $row['qty'] ?>" name="qty" placeholder="Product Quantity" class="p-2 rounded-md w-full border-2 border-black outline-none" required>
+                        <textarea name="short_desc" placeholder="Short Description" class="p-2 rounded-md w-full border-2 border-black outline-none" required><?php if (isset($row)) echo $row['short_desc'] ?></textarea>
+                        <textarea name="description" placeholder="Description" class="p-2 rounded-md w-full border-2 border-black outline-none" required><?php if (isset($row)) echo $row['description'] ?></textarea>
+                        <textarea name="meta_title" placeholder="Meta Title" class="p-2 rounded-md w-full border-2 border-black outline-none"><?php if (isset($row)) echo $row['meta_title'] ?></textarea>
+                        <textarea name="meta_short_desc" placeholder="Meta short Description" class="p-2 rounded-md w-full border-2 border-black outline-none"><?php if (isset($row)) echo $row['meta_short_desc'] ?></textarea>
+                        <textarea name="meta_desc" placeholder="Meta Description" class="p-2 rounded-md w-full border-2 border-black outline-none"><?php if (isset($row)) echo $row['meta_desc'] ?></textarea>
+                        <textarea name="meta_keyword" placeholder="Meta Keyword" class="p-2 rounded-md w-full border-2 border-black outline-none"><?php if (isset($row)) echo $row['meta_keyword'] ?></textarea>
+                        <button type="submit" name="addProduct" class="btn btn-md btn-info w-full text-white">Add Product</button>
+                        </form>
                     </div>
-
                 </div>
+
             </div>
         </div>
+    </div>
     </div>
     <?php require("./assets/footer.php"); ?>
 
